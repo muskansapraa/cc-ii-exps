@@ -1,0 +1,24 @@
+# Problem 8.2: Frog Jump
+
+class Solution {
+    unordered_map<int,int> idx;   // stone value -> index
+    int n;
+    bool solve(int pos, int jump, vector<int>& stones) {
+        if (pos == n - 1) return true;              // reached the far bank
+        for (int d = -1; d <= 1; ++d) {
+            int nextJump = jump + d;
+            if (nextJump <= 0) continue;            // must move forward
+            auto it = idx.find(stones[pos] + nextJump);
+            if (it != idx.end() && solve(it->second, nextJump, stones))
+                return true;
+        }
+        return false;
+    }
+public:
+    bool canCross(vector<int>& stones) {
+        if (stones[1] != 1) return false;
+        n = stones.size();
+        for (int i = 0; i < n; ++i) idx[stones[i]] = i;
+        return solve(0, 0, stones);
+    }
+};
